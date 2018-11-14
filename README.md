@@ -1,2 +1,0 @@
-# C_COLECTION
-C Program HOWTO !

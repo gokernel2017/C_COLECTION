@@ -343,16 +343,14 @@ void Run (EDITOR *o) {
     int quit = 0;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-        switch (e.type) {
-        case SDL_KEYDOWN:
-            if ((key = e.key.keysym.unicode)==0)
-                key = e.key.keysym.sym;
-            if (key == SDLK_F12)
-                quit = 1;
-            if (key == SDLK_UP || key == SDLK_DOWN)
-                Draw (o);
-            break;
-        }// switch (e.type)
+            if (e.type == SDL_KEYDOWN) {
+                if ((key = e.key.keysym.unicode)==0)
+                    key = e.key.keysym.sym;
+                if (key == SDLK_ESCAPE)
+                    quit = 1;
+                if (key == SDLK_UP || key == SDLK_DOWN)
+                    Draw (o);
+            }// if (e.type == SDL_KEYDOWN)
         }// while (SDL_PollEvent(&e))
         SDL_Delay (10);
     }

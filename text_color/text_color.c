@@ -81,6 +81,25 @@ typedef struct {
     SDL_Rect  r;
 }EDITOR;
 
+char *WORDS[] = {
+  "asm", "auto",
+  "break",
+  "case", "char", "const", "continue",
+  "default", "do", "double",
+  "else", "enum", "extern",
+  "float", "for",
+  "goto",
+  "if", "int",
+  "long",
+  "register", "return",
+  "short", "signed", "sizeof", "static", "struct", "switch",
+  "typedef",
+  "union", "unsigned",
+  "void", "volatile",
+  "while",
+  0
+};
+
 SDL_Surface *screen;
 char *str;
 int key;
@@ -221,22 +240,21 @@ void Draw (EDITOR *o) {
                 else
                 if (!is_reserved_word && !iswordchar(str[-1])) {
 
+                    // if text[ch] == (First char of RESERVEDs WORDs): [b]reak, [c]ase, [s]truct ... etc
                     if ((*str >= 'a' && *str <= 'g') || *str=='i' || *str=='l' || *str=='o' || (*str >= 'r' && *str <= 'v') || *str=='w') {
-                        // COLORIZE WORD: void
-                        //
-                        if (str[0]=='v' && str[1]=='o' && str[2]=='i' && str[3]=='d' && !iswordchar(str[4])) {
-                            is_reserved_word = 4;
+                        char *s = str;
+                        int count = 0, i;
+                        char word [20];
+                        while (*s) {
+                            word[count++] = *s++;
+                            if (!iswordchar(*s) || count > 8) break;
                         }
-                        else
-                        // COLORIZE WORD: int
-                        if (str[0]=='i' && str[1]=='n' && str[2]=='t' && !iswordchar(str[3])) {
-                            is_reserved_word = 3;
-                        }
-                        else
-                        // COLORIZE WORD: return
-                        if (str[0]=='r' && str[1]=='e' && str[2]=='t' && str[3]=='u' && str[4]=='r' && str[5]=='n' && !iswordchar(str[6])) {
-                            is_reserved_word = 6;
-                        }
+                        word[count] = 0;
+                        for (i = 0; WORDS[i]; i++)
+                            if (!strcmp(WORDS[i], word)) {
+                                is_reserved_word = count; // <-- HERE: increment from size of WORD.
+                          break;
+                            }
                     }
 
                 }// if (!is_reserved_word && !iswordchar(str[-1]))
